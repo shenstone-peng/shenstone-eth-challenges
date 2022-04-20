@@ -12,6 +12,7 @@ require("@nomiclabs/hardhat-ethers");
 require("@nomiclabs/hardhat-etherscan");
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils;
+const { removeConsoleLog } = require('hardhat-preprocessor');
 
 /*
       📡 This is where you configure your deploy configuration for 🏗 scaffold-eth
@@ -64,7 +65,7 @@ module.exports = {
       },
     },
     kovan: {
-      url: "https://kovan.infura.io/v3/ec6a8acd1d354717acec099ad46a0bab", // <---- YOUR INFURA ID! (or it won't work)
+      url: "https://kovan.infura.io/v3/e00be31566f4406d9bbbd23b259e54d3", // <---- YOUR INFURA ID! (or it won't work)
       //    url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXXXXXXXXXXXXXXX/eth/kovan", // <---- YOUR MORALIS ID! (not limited to infura)
       accounts: {
         mnemonic: mnemonic(),
@@ -253,6 +254,12 @@ module.exports = {
       default: 0, // here this will by default take the first account as deployer
     },
   },
+  preprocess: {
+    eachLine: removeConsoleLog(
+      (hre) => hre.network.name !== 'hardhat' && hre.network.name !== 'localhost'
+    ),
+  },
+  
   etherscan: {
     // Add your api key here
     apiKey: "DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW",

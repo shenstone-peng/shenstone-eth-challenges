@@ -1,9 +1,24 @@
-// SPDX-License-Identifier: MIT
+
+// File contracts/ExampleExternalContract.sol
+
+
 pragma solidity 0.8.4;
 
-import "hardhat/console.sol";
-import "./ExampleExternalContract.sol";
-import "hardhat/console.sol";
+contract ExampleExternalContract {
+
+  bool public completed;
+
+  function complete() public payable {
+    completed = true;
+  }
+
+}
+
+
+// File contracts/Staker.sol
+
+
+pragma solidity 0.8.4;
 contract Staker {
   //constant
   uint256 constant THRESHOLD = 1 ether;
@@ -32,12 +47,12 @@ contract Staker {
   function timeLeft() external view returns(uint256){
     if(block.timestamp >= deadline)
     {
-        console.log("Deadline have expired, anyone can call function execute");
+        
         return 0;
     }
     
     uint256 _timeLeft = deadline - block.timestamp;
-    console.log("Please wait %s seconds", _timeLeft);
+    
     return _timeLeft;
   }
 
@@ -46,10 +61,10 @@ contract Staker {
   // Collect funds in a payable `stake()` function and track individual `balances` with a mapping:
   //  ( make sure to add a `Stake(address,uint256)` event and emit it for the frontend <List/> display )
   function stake() public payable notCompleted {
-      console.log("ethers in transaction is %s!", msg.value);
+      
       emit Stake(msg.sender, msg.value);
       balances[msg.sender] += msg.value;
-      console.log("Sender balance is %s tokens", balances[msg.sender]);
+      
   }
 
   // After some `deadline` allow anyone to call an `execute()` function
@@ -58,7 +73,7 @@ contract Staker {
   function execute() public notCompleted {
     require(block.timestamp >= deadline, "deadline hasn't come");
     if(address(this).balance >= THRESHOLD){
-      console.log("we got enough ethers!");
+     
       exampleExternalContract.complete{value: address(this).balance}();
     }
     else{
